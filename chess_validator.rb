@@ -149,9 +149,9 @@ class Knight < Piece
   end
 end
 
-real_board = Board.new("simple_board.txt").parse_board
+real_board = Board.new("complex_board.txt").parse_board
 
-movements = IO.read "simple_moves.txt"
+movements = IO.read "complex_moves.txt"
 
 validator = ChessValidator.new real_board
 validator.validate movements
