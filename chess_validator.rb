@@ -42,7 +42,7 @@ class ChessValidator
       pieces = {:R => Rook, :N => Knight, :B => Bishop, :Q => Queen, :K => King, :P => Pawn}
 
       if pieces[piece_type]
-        pieces[piece_type].new(@board, start_position).move(dest_position)
+        pieces[piece_type].new(@board, start_position).validate(dest_position)
       else
         puts "ILLEGAL"
       end
@@ -87,65 +87,49 @@ class Piece
   def get_color
     @board[@position[0]][@position[1]].to_s.chars.first.to_sym
   end
-end
 
-class Rook < Piece
-  def move dest
-    if is_cell_empty?(dest) && rook_move(dest)
+  def validate pos
+    if legal_move? pos
       puts "LEGAL"
     else
       puts "ILLEGAL"
     end
+  end
+end
+
+class Rook < Piece
+  def legal_move? dest
+    is_cell_empty?(dest) && rook_move(dest)
   end
 end
 
 class Bishop < Piece
-  def move dest
-    if is_cell_empty?(dest) && bishop_move(dest)
-      puts "LEGAL"
-    else
-      puts "ILLEGAL"
-    end
+  def legal_move? dest
+    is_cell_empty?(dest) && bishop_move(dest)
   end
 end
 
 class Queen < Piece
-  def move dest
-    if is_cell_empty?(dest) && queen_move(dest)
-      puts "LEGAL"
-    else
-      puts "ILLEGAL"
-    end
+  def legal_move? dest
+    is_cell_empty?(dest) && queen_move(dest)
   end
 end
 
 class King < Piece
-  def move dest
-    if king_move(dest)
-      puts "LEGAL"
-    else
-      puts "ILLEGAL"
-    end
+  def legal_move? dest
+    king_move(dest)
   end
 end
 
 class Pawn < Piece
-  def move dest
-    if is_cell_empty?(dest) && pawn_move(dest)
-      puts "LEGAL"
-    else
-      puts "ILLEGAL"
-    end
+  def legal_move? dest
+    is_cell_empty?(dest) && pawn_move(dest)
   end
 end
 
 class Knight < Piece
-  def move dest
-    if is_cell_empty?(dest) && knight_move(dest)
-      puts "LEGAL"
-    else
-      puts "ILLEGAL"
-    end
+  def legal_move? dest
+    is_cell_empty?(dest) && knight_move(dest)
   end
 end
 
