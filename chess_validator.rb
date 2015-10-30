@@ -44,7 +44,7 @@ class ChessValidator
       if pieces[piece_type]
         pieces[piece_type].new(@board, start_position).move(dest_position)
       else
-        puts "ILEGAL"
+        puts "ILLEGAL"
       end
     end
   end
@@ -94,7 +94,7 @@ class Rook < Piece
     if is_cell_empty?(dest) && rook_move(dest)
       puts "LEGAL"
     else
-      puts "ILEGAL"
+      puts "ILLEGAL"
     end
   end
 end
@@ -104,7 +104,7 @@ class Bishop < Piece
     if is_cell_empty?(dest) && bishop_move(dest)
       puts "LEGAL"
     else
-      puts "ILEGAL"
+      puts "ILLEGAL"
     end
   end
 end
@@ -114,7 +114,7 @@ class Queen < Piece
     if is_cell_empty?(dest) && queen_move(dest)
       puts "LEGAL"
     else
-      puts "ILEGAL"
+      puts "ILLEGAL"
     end
   end
 end
@@ -124,7 +124,7 @@ class King < Piece
     if king_move(dest)
       puts "LEGAL"
     else
-      puts "ILEGAL"
+      puts "ILLEGAL"
     end
   end
 end
@@ -134,7 +134,7 @@ class Pawn < Piece
     if is_cell_empty?(dest) && pawn_move(dest)
       puts "LEGAL"
     else
-      puts "ILEGAL"
+      puts "ILLEGAL"
     end
   end
 end
@@ -144,7 +144,7 @@ class Knight < Piece
     if is_cell_empty?(dest) && knight_move(dest)
       puts "LEGAL"
     else
-      puts "ILEGAL"
+      puts "ILLEGAL"
     end
   end
 end
