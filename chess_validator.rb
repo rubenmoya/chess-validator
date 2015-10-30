@@ -15,6 +15,7 @@ module CheckMove
   def rook_move
     (@start[0] == @dest[0]) || (@start[1] == @dest[1])
   end
+
   def bishop_move
     (@start[0] - @dest[0]).abs == (@start[1] - @dest[1]).abs
   end
@@ -65,8 +66,17 @@ class Bishop < Piece
   end
 end
 
+class Queen < Piece
+  def valid_move?
+    rook_move || bishop_move
+  end
+end
+
 rook = Rook.new board, [1,1], [1,7]
 rook.legal_move?
 
 bishop = Bishop.new board, [4,2], [5,3]
 bishop.legal_move?
+
+queen = Queen.new board, [4,2], [5,3]
+queen.legal_move?
