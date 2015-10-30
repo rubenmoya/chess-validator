@@ -20,9 +20,12 @@ module CheckMove
     (@start[0] - @dest[0]).abs == (@start[1] - @dest[1]).abs
   end
 
+  def queen_move
+    rook_move || bishop_move
+  end
+
   def king_move
-    move = (@start[0] - @dest[0]).abs == (@start[1] - @dest[1]).abs
-    move = 1
+    ((@start[0] - @dest[0]).abs == 1) && ((@start[1] - @dest[1]).abs == 1)
   end
 
   def valid_position?
@@ -73,7 +76,7 @@ end
 
 class Queen < Piece
   def valid_move?
-    rook_move || bishop_move
+    queen_move
   end
 end
 
