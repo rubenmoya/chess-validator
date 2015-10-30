@@ -13,6 +13,16 @@ board = [
   [:wR, :wN, :wB, :wQ, :wK, :wB, :wN, :wR],
 ]
 
+class Board
+  def initialize board
+    @board = board
+  end
+
+  def parse_board
+
+  end
+end
+
 class ChessValidator
   def initialize board
     @board = board
@@ -28,30 +38,10 @@ class ChessValidator
 
       piece_type = get_piece_type start_position
 
-      case piece_type
-      when :R
-        rook = Rook.new @board, start_position
-        rook.move dest_position
-
-      when :N
-        knight = Knight.new @board, start_position
-        knight.move dest_position
-
-      when :B
-        bishop = Bishop.new @board, start_position
-        bishop.move dest_position
-
-      when :Q
-        queen = Queen.new @board, start_position
-        queen.move dest_position
-
-      when :K
-        king = King.new @board, start_position
-        king.move dest_position
-
-      when :P
-        pawn = Pawn.new @board, start_position
-        pawn.move dest_position
+      pieces = {:R => Rook, :N => Knight, :B => Bishop, :Q => Queen, :K => King, :P => Pawn}
+      
+      if pieces[piece_type]
+        pieces[piece_type].new(@board, start_position).move(dest_position)
       else
         puts "ILEGAL"
       end
