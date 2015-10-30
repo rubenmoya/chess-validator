@@ -20,6 +20,11 @@ module CheckMove
     (@start[0] - @dest[0]).abs == (@start[1] - @dest[1]).abs
   end
 
+  def king_move
+    move = (@start[0] - @dest[0]).abs == (@start[1] - @dest[1]).abs
+    move = 1
+  end
+
   def valid_position?
     start_color = piece_color? @start
     dest_color = piece_color? @dest
@@ -72,6 +77,12 @@ class Queen < Piece
   end
 end
 
+class King < Piece
+  def valid_move?
+    king_move
+  end
+end
+
 rook = Rook.new board, [1,1], [1,7]
 rook.legal_move?
 
@@ -80,3 +91,6 @@ bishop.legal_move?
 
 queen = Queen.new board, [4,2], [5,3]
 queen.legal_move?
+
+king = King.new board, [4,2], [5,1]
+king.legal_move?
