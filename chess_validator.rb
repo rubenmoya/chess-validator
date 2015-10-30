@@ -2,24 +2,25 @@ require "pry"
 require "./game_rules"
 require "./piece_rules"
 
-board = [
-  [:bR, :bN, :bB, :bQ, :bK, :bB, :bN, :bR],
-  [:bP, :bP, :bP, :bP, :bP, :bP, :bP, :bP],
-  [nil, nil, nil, nil, nil, nil, nil, nil],
-  [nil, nil, nil, nil, nil, nil, nil, nil],
-  [nil, nil, nil, nil, nil, nil, nil, nil],
-  [nil, nil, nil, nil, nil, nil, nil, nil],
-  [:wP, :wP, :wP, :wP, :wP, :wP, :wP, :wP],
-  [:wR, :wN, :wB, :wQ, :wK, :wB, :wN, :wR],
-]
-
 class Board
   def initialize board
-    @board = board
+    @board = IO.read(board)
   end
 
   def parse_board
-
+    board = []
+    @board.split("\n").each do |r|
+      row = []
+      r.split(" ").each do |item|
+        if item == "--"
+          row << nil
+        else
+          row << item.to_sym
+        end
+      end
+      board << row
+    end
+    return board
   end
 end
 
@@ -39,7 +40,7 @@ class ChessValidator
       piece_type = get_piece_type start_position
 
       pieces = {:R => Rook, :N => Knight, :B => Bishop, :Q => Queen, :K => King, :P => Pawn}
-      
+
       if pieces[piece_type]
         pieces[piece_type].new(@board, start_position).move(dest_position)
       else
@@ -148,7 +149,9 @@ class Knight < Piece
   end
 end
 
-movements = IO.read("simple_moves.txt")
+real_board = Board.new("simple_board.txt").parse_board
 
-validator = ChessValidator.new board
+movements = IO.read "simple_moves.txt"
+
+validator = ChessValidator.new real_board
 validator.validate movements
