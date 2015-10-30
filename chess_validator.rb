@@ -1,7 +1,7 @@
 require "pry"
 
 board = [
-  [:bR, nil, :bB, :bQ, :bK, nil, nil, :bR],
+  [:bR, :bN, :bB, :bQ, :bK, nil, nil, :bR],
   [nil, nil, nil, :bP, nil, nil, nil, nil],
   [nil, nil, nil, nil, nil, nil, nil, nil],
   [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -14,7 +14,7 @@ board = [
 module GameRules
 
   def is_cell_empty? dest
-    @board[dest[0] - 1][dest[1] - 1].nil?
+    @board[dest[0]][dest[1] - 1].nil?
   end
 
   def is_enemy_in_cell?
@@ -24,7 +24,7 @@ module GameRules
   private
 
   def piece_color coord
-    @board[@coord[0] - 1][@coord[1] - 1].to_s.gsub(/./).first.to_sym
+    @board[@coord[0]][@coord[1]].to_s.gsub(/./).first.to_sym
   end
 end
 
@@ -42,7 +42,9 @@ module PieceRules
   end
 
   def king_move dest
-    ((@position[0] - dest[0]).abs <= 1) || ((@position[1] - dest[1]).abs <= 1)
+    x_move = (@position[0] - dest[0]).abs
+    y_move = (@position[1] - dest[1]).abs
+    (x_move == 1) || (y_move == 1)
   end
 
   def pawn_move dest
@@ -54,7 +56,7 @@ module PieceRules
   end
 
   def knight_move dest
-
+    (@position[0] - dest[0]).abs == 2 && (@position[1] - dest[1]).abs == 1
   end
 end
 
@@ -68,14 +70,17 @@ class Piece
   end
 
   def get_color
-    @board[@position[0] - 1][@position[1] - 1].to_s.gsub(/./).first.to_sym
+    @board[@position[0]][@position[1]].to_s.gsub(/./).first.to_sym
   end
 end
 
 class Rook < Piece
   def move dest
-
-    rook_move(dest)
+    if is_cell_empty?(dest) && rook_move(dest)
+      puts "LEGAL"
+    else
+      puts "ILEGAL"
+    end
   end
 end
 
@@ -101,7 +106,7 @@ end
 
 class King < Piece
   def move dest
-    if is_cell_empty?(dest) && king_move(dest)
+    if king_move(dest)
       puts "LEGAL"
     else
       puts "ILEGAL"
@@ -119,20 +124,33 @@ class Pawn < Piece
   end
 end
 
-rook = Rook.new board, [1,1]
-rook.move [1,7]
+class Knight < Piece
+  def move dest
+    if is_cell_empty?(dest) && knight_move(dest)
+      puts "LEGAL"
+    else
+      puts "ILEGAL"
+    end
+  end
+end
 
-bishop = Bishop.new board, [1,3]
-bishop.move [4,6]
+rook = Rook.new board, [0, 0]
+rook.move [0, 6]
 
-queen = Queen.new board, [1,4]
-queen.move [5,4]
+bishop = Bishop.new board, [0, 2]
+bishop.move [3, 5]
 
-king = King.new board, [1,5]
-king.move [2,5]
+queen = Queen.new board, [0, 3]
+queen.move [4, 3]
 
-pawn = Pawn.new board, [2,4]
-pawn.move [3,4]
+king = King.new board, [0, 4]
+king.move [1, 4]
 
-pawn = Pawn.new board, [7,4]
-pawn.move [6,4]
+pawn = Pawn.new board, [1, 3]
+pawn.move [2, 3]
+
+pawn = Pawn.new board, [6, 3]
+pawn.move [5, 3]
+
+knight = Knight.new board, [0,1]
+knight.move [2, 2]
