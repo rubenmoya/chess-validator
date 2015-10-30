@@ -1,14 +1,14 @@
 require "pry"
 
 board = [
-  [:bR, nil, nil, nil, nil, nil, nil, :bR],
+  [:bR, nil, :bB, :bQ, :bK, nil, nil, :bR],
+  [nil, nil, nil, :bP, nil, nil, nil, nil],
   [nil, nil, nil, nil, nil, nil, nil, nil],
   [nil, nil, nil, nil, nil, nil, nil, nil],
   [nil, nil, nil, nil, nil, nil, nil, nil],
   [nil, nil, nil, nil, nil, nil, nil, nil],
-  [nil, nil, nil, nil, nil, nil, nil, nil],
-  [nil, nil, nil, nil, nil, nil, nil, nil],
-  [:bR, nil, nil, nil, nil, nil, nil, :wR]
+  [nil, nil, nil, :wP, nil, nil, nil, nil],
+  [:wR, nil, nil, nil, nil, nil, nil, :wR]
 ]
 
 module CheckMove
@@ -25,7 +25,16 @@ module CheckMove
   end
 
   def king_move
-    ((@start[0] - @dest[0]).abs == 1) && ((@start[1] - @dest[1]).abs == 1)
+    ((@start[0] - @dest[0]).abs <= 1) || ((@start[1] - @dest[1]).abs <= 1)
+  end
+
+  def pawn_move
+    pawn_color = piece_color? @start
+    if pawn_color == :w
+      @start[0] - 1 == @dest[0]
+    else
+      @start[0] + 1 == @dest[0]
+    end
   end
 
   def valid_position?
@@ -40,7 +49,11 @@ module CheckMove
   end
 
   def piece_color? piece
-    @board[piece[0] - 1][piece[1] - 1].to_s.start_with?("w")
+    if @board[piece[0] - 1][piece[1] - 1].to_s.start_with?("w")
+      return :w
+    else
+      return :b
+    end
   end
 end
 
@@ -86,14 +99,26 @@ class King < Piece
   end
 end
 
+class Pawn < Piece
+  def valid_move?
+    pawn_move
+  end
+end
+
 rook = Rook.new board, [1,1], [1,7]
 rook.legal_move?
 
-bishop = Bishop.new board, [4,2], [5,3]
+bishop = Bishop.new board, [1,3], [4,6]
 bishop.legal_move?
 
-queen = Queen.new board, [4,2], [5,3]
+queen = Queen.new board, [1,4], [5,4]
 queen.legal_move?
 
-king = King.new board, [4,2], [5,1]
+king = King.new board, [1,5], [2,5]
 king.legal_move?
+
+pawn = Pawn.new board, [4,4], [5,4]
+pawn.legal_move?
+
+pawn = Pawn.new board, [7,4], [6,4]
+pawn.legal_move?
