@@ -11,63 +11,77 @@ board = [
   [:wR, nil, nil, nil, nil, nil, nil, :wR]
 ]
 
-module CheckMove
-  def rook_move
-    (@start[0] == @dest[0]) || (@start[1] == @dest[1])
+module GameRules
+
+  def is_cell_empty? dest
+    @board[dest[0] - 1][dest[1] - 1].nil?
   end
 
-  def bishop_move
-    (@start[0] - @dest[0]).abs == (@start[1] - @dest[1]).abs
+  def is_enemy_in_cell?
+    get_color != piece_color(dest)
   end
 
-  def queen_move
-    rook_move || bishop_move
+  private
+
+  def piece_color coord
+    @board[@coord[0] - 1][@coord[1] - 1].to_s.gsub(/./).first.to_sym
+  end
+end
+
+module PieceRules
+  def rook_move dest
+    (@position[0] == dest[0]) || (@position[1] == dest[1])
   end
 
-  def king_move
-    ((@start[0] - @dest[0]).abs <= 1) || ((@start[1] - @dest[1]).abs <= 1)
+  def bishop_move dest
+    (@position[0] - dest[0]).abs == (@position[1] - dest[1]).abs
   end
 
-  def pawn_move
-    pawn_color = piece_color? @start
-    if pawn_color == :w
-      @start[0] - 1 == @dest[0]
+  def queen_move dest
+    rook_move(dest) || bishop_move(dest)
+  end
+
+  def king_move dest
+    ((@position[0] - dest[0]).abs <= 1) || ((@position[1] - dest[1]).abs <= 1)
+  end
+
+  def pawn_move dest
+    if get_color == :w
+      @position[0] - 1 == dest[0]
     else
-      @start[0] + 1 == @dest[0]
+      @position[0] + 1 == dest[0]
     end
   end
 
-  def valid_position?
-    start_color = piece_color? @start
-    dest_color = piece_color? @dest
+  def knight_move dest
 
-    is_cell_empty? || (start_color != dest_color)
-  end
-
-  def is_cell_empty?
-    @board[@dest[0] - 1][@dest[1] - 1].nil?
-  end
-
-  def piece_color? piece
-    if @board[piece[0] - 1][piece[1] - 1].to_s.start_with?("w")
-      return :w
-    else
-      return :b
-    end
   end
 end
 
 class Piece
-  include CheckMove
+  include GameRules
+  include PieceRules
 
-  def initialize board, start, dest
+  def initialize board, position
     @board = board
-    @start = start
-    @dest = dest
+    @position = position
   end
 
-  def legal_move?
-    if valid_position? && valid_move?
+  def get_color
+    @board[@position[0] - 1][@position[1] - 1].to_s.gsub(/./).first.to_sym
+  end
+end
+
+class Rook < Piece
+  def move dest
+
+    rook_move(dest)
+  end
+end
+
+class Bishop < Piece
+  def move dest
+    if is_cell_empty?(dest) && bishop_move(dest)
       puts "LEGAL"
     else
       puts "ILEGAL"
@@ -75,50 +89,50 @@ class Piece
   end
 end
 
-class Rook < Piece
-  def valid_move?
-    rook_move
-  end
-end
-
-class Bishop < Piece
-  def valid_move?
-    bishop_move
-  end
-end
-
 class Queen < Piece
-  def valid_move?
-    queen_move
+  def move dest
+    if is_cell_empty?(dest) && queen_move(dest)
+      puts "LEGAL"
+    else
+      puts "ILEGAL"
+    end
   end
 end
 
 class King < Piece
-  def valid_move?
-    king_move
+  def move dest
+    if is_cell_empty?(dest) && king_move(dest)
+      puts "LEGAL"
+    else
+      puts "ILEGAL"
+    end
   end
 end
 
 class Pawn < Piece
-  def valid_move?
-    pawn_move
+  def move dest
+    if is_cell_empty?(dest) && pawn_move(dest)
+      puts "LEGAL"
+    else
+      puts "ILEGAL"
+    end
   end
 end
 
-rook = Rook.new board, [1,1], [1,7]
-rook.legal_move?
+rook = Rook.new board, [1,1]
+rook.move [1,7]
 
-bishop = Bishop.new board, [1,3], [4,6]
-bishop.legal_move?
+bishop = Bishop.new board, [1,3]
+bishop.move [4,6]
 
-queen = Queen.new board, [1,4], [5,4]
-queen.legal_move?
+queen = Queen.new board, [1,4]
+queen.move [5,4]
 
-king = King.new board, [1,5], [2,5]
-king.legal_move?
+king = King.new board, [1,5]
+king.move [2,5]
 
-pawn = Pawn.new board, [4,4], [5,4]
-pawn.legal_move?
+pawn = Pawn.new board, [2,4]
+pawn.move [3,4]
 
-pawn = Pawn.new board, [7,4], [6,4]
-pawn.legal_move?
+pawn = Pawn.new board, [7,4]
+pawn.move [6,4]
