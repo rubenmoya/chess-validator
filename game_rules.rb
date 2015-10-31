@@ -1,7 +1,7 @@
 module GameRules
 
   def is_cell_empty? dest
-    @board[dest[0]][dest[1] - 1].nil?
+    @board[dest[0]][dest[1]].nil?
   end
 
   def is_enemy_in_cell?

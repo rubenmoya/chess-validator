@@ -117,7 +117,7 @@ end
 
 class King < Piece
   def legal_move? dest
-    king_move(dest)
+    is_cell_empty?(dest) && king_move(dest)
   end
 end
 
