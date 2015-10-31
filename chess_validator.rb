@@ -1,6 +1,5 @@
-require "pry"
-require "./game_rules"
-require "./piece_rules"
+require "./modules/game_rules"
+require "./modules/piece_rules"
 
 class Board
   def initialize board
@@ -133,9 +132,9 @@ class Knight < Piece
   end
 end
 
-real_board = Board.new("complex_board.txt").parse_board
+real_board = Board.new("./extras/complex_board.txt").parse_board
 
-movements = IO.read "complex_moves.txt"
+movements = IO.read "./extras/complex_moves.txt"
 
 validator = ChessValidator.new real_board
 validator.validate movements
